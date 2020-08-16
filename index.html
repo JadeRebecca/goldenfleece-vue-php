@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Jason">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+        <title>Golden Fleece app using Vue.js, PHP & MySQL</title>
+    
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+        <link rel="stylesheet" href="crew.css" />
+
+    </head>
+
+    <body>
+        <header>
+            <h1>
+                <img src="https://www.wildcodeschool.com/assets/logo_main-e4f3f744c8e717f1b7df3858dce55a86c63d4766d5d9a7f454250145f097c2fe.png" alt="Wild Code School logo" />
+                Les Argonautes
+            </h1>
+            <p class="text-center display-4 pt-2" style = "font-size:25px">Golden Fleece app using Vue.js, PHP & MySQL</p>
+
+        </header>
+
+        <main>
+            <div id="app">
+                <div class="container-fluid">
+                    <div class="col-lg-12 mt-3">
+                        <h2>{{ titreAjout }}</h2>
+                    </div>
+
+                    <form class="new-member-form" action="#" method="post">
+                        <label for="name">Nom de l&apos;Argonaute : </label>
+                        <input id="name" name="name" type="text" placeholder="Charalampos" v-model="newMember.name" />
+                        <button  @click="addMember();">Envoyer</button>
+                    </form>
+                </div>
+
+                <div class="container">
+                  
+                    <hr class="bg-info">
+                    <div class="alert alert-danger" v-if="errorMsg">
+                        {{ errorMsg }}
+                    </div>
+                    <div class="alert alert-succes" v-if="successMsg">
+                        {{ successMsg }}
+                    </div>
+                    
+                    <div class="col-lg-12 mt-3">
+                        <h2>{{ titreListe }}</h2>
+                    </div>
+                        <section class="member-list">
+                            <div class="member-item" v-for="member in members">{{ member.name}}</div>
+                        </section>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Réalisé par Jason en Anthestérion de l'an 515 avant JC</p>
+        </footer>
+
+        <script type="" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script type="text/javascript" src ="main.js"></script>
+    </body>
+</html>
