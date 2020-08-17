@@ -5,7 +5,7 @@
         <meta name="author" content="Jason">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
-        <title>Golden Fleece app using Vue.js, PHP & MySQL</title>
+        <title>Les Argonautes - app using Vue.js, PHP & MySQL</title>
     
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
@@ -19,7 +19,7 @@
                 <img src="https://www.wildcodeschool.com/assets/logo_main-e4f3f744c8e717f1b7df3858dce55a86c63d4766d5d9a7f454250145f097c2fe.png" alt="Wild Code School logo" />
                 Les Argonautes
             </h1>
-            <p class="text-center display-4 pt-2" style = "font-size:25px">Golden Fleece app using Vue.js, PHP & MySQL</p>
+            <p class="text-center display-4 pt-2" style = "font-size:25px">app using Vue.js, PHP & MySQL</p>
 
         </header>
 
@@ -43,7 +43,7 @@
                     <div class="alert alert-danger" v-if="errorMsg">
                         {{ errorMsg }}
                     </div>
-                    <div class="alert alert-succes" v-if="successMsg">
+                    <div class="alert alert-success" v-if="successMsg">
                         {{ successMsg }}
                     </div>
                     
@@ -51,8 +51,32 @@
                         <h2>{{ titreListe }}</h2>
                     </div>
                         <section class="member-list">
-                            <div class="member-item" v-for="member in members">{{ member.name}}</div>
+                            <div class="member-item" v-for="member in members">
+                                {{ member.name}} 
+                                <a href="#" class="text-danger" @click="showDeleteModal=true;  selectMember(member)"><i class="fas fa-trash-alt"></i></a>
+                            </div>
                         </section>
+                </div>
+
+                <!-- fenêtre modale pour suppression d'un membre-->
+                <div id="overlay" v-if="showDeleteModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Suppression d'un membre</h5>
+                                <button type="button" class="close" @click="showDeleteModal=false">
+                                    <span aria-hidden="true">X</span>
+                                </button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <h4 class ="text-danger">Etes vous sur de vouloir supprimer ce membre?</h4>
+                                <h5>Vous supprimez {{currentMember.name}}</h5>
+                                <hr>
+                                <button class="btn btn-danger btn-lg" @click="showDeleteModal=false; deleteMember();">Oui</button>
+                                <button class="btn btn-success btn-lg" @click="showDeleteModal=false">Non</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -63,6 +87,71 @@
 
         <script type="" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-        <script type="text/javascript" src ="main.js"></script>
+        <script>
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    titreAjout: 'Ajouter un(e) Argonaute',
+                    titreListe: 'Membres de l\'équipage',
+                    errorMsg: "",
+                    successMsg: "",
+                    showDeleteModal : false,
+                    members : [],
+                    newMember : {name: ""},
+                    currentMember: {}
+                },
+                mounted: function(){
+                    this.getAllMembers();
+                },
+                methods: {
+                    getAllMembers(){
+                        axios.get("http://localhost/wildcodeschool/goldenfleece-vue-php/process.php?action=read").then(function(response){
+                            if(response.data.error){
+                                app.errorMsg = response.data.message;
+                            }
+                            else{
+                                app.members = response.data.members;
+                            }
+                        });
+                    },
+                    addMember(){
+                        var formData = app.toFormData(app.newMember);
+                        axios.post("http://localhost/wildcodeschool/goldenfleece-vue-php/process.php?action=create", formData).then(function(response){
+                            app.newMember = {name: ""}    
+                            if(response.data.error){
+                                app.errorMsg = response.data.message;
+                            }
+                            else{
+                                app.successMsg = response.data.message;
+                                app.getAllMembers();
+                            }
+                        });
+                    },
+                    deleteMember(){
+                        var formData = app.toFormData(app.currentMember);
+                        axios.post("http://localhost/wildcodeschool/goldenfleece-vue-php/process.php?action=delete", formData).then(function(response){
+                            app.currentMember = {};
+                            if(response.data.error){
+                                app.errorMsg = response.data.message;
+                            }
+                            else{
+                                app.successMsg = response.data.message;
+                                app.getAllMembers();
+                            }
+                        });
+                    },
+                    toFormData(obj){
+                        var fd = new FormData();
+                        for(var i in obj){
+                            fd.append(i, obj[i]);
+                        }
+                        return fd;
+                    },
+                    selectMember(member){
+                        app.currentMember = member;
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

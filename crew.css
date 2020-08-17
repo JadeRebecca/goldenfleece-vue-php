@@ -55,9 +55,18 @@ section{
 footer {
   margin-top: 2em;
   text-align: center;
-  color: #fff;
   background: #f76c6c;
   padding: 0.25em 0;
+}
+
+/*fenêtre modale pour suppression*/
+#overlay{
+  position: fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  background: rgba(0,0,0,0.6) ;
 }
 
 /*liste sur 3 colonnes pour les grand écrans*/
@@ -66,3 +75,4 @@ footer {
         flex: 0 1 33%;
     }
 }
+

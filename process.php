@@ -16,13 +16,6 @@
         $action = $_GET['action'];
     }
 	
-	//ajout d'un nouveau membre
-	/*if(isset($_POST['add'])) {
-		$name = strip_tags($_POST['name']);
-		$reqInsert = $db->prepare("INSERT INTO argonauts (name) VALUES (:name)");
-		$reqInsert->execute(array('name'=> $name));	
-	}*/
-	
     //récupération de la liste des membres
     if($action == 'read'){
         $members =array();
@@ -40,12 +33,26 @@
         $reqInsert = $db->prepare("INSERT INTO argonauts (name) VALUES (:name)");
         $reqInsert->execute(array('name'=> $name));	
         
-        if($sql){
+        if($reqInsert){
             $result['message'] = "User added successfully!";
         }
         else{
             $result['error'] = true;
             $result['message'] = 'Failed to add';
+        }
+    }
+
+    if($action == 'delete'){
+        $id = $_POST['id'];
+        $reqDelete = $db->prepare("DELETE FROM argonauts WHERE id='$id'");
+        $reqDelete->execute();	
+        
+        if($reqDelete){
+            $result['message'] = "User deleted successfully!";
+        }
+        else{
+            $result['error'] = true;
+            $result['message'] = 'Failed to delete';
         }
     }
 
