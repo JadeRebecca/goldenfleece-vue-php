@@ -31,31 +31,29 @@
                     </div>
 
                     <form class="new-member-form" action="#" method="post">
-                        <label for="name">Nom de l&apos;Argonaute : </label>
+                        <label for="name">{{ sousTitreAjout }} : </label>
                         <input id="name" name="name" type="text" placeholder="Charalampos" v-model="newMember.name" />
                         <button  @click="addMember();">Envoyer</button>
                     </form>
                 </div>
 
                 <div class="container">
-                  
-                    <hr class="bg-info">
-                    <div class="alert alert-danger" v-if="errorMsg">
+                    <div class="alert alert-danger" v-if="errorMsg !=''">
                         {{ errorMsg }}
                     </div>
-                    <div class="alert alert-success" v-if="successMsg">
+                    <div class="alert alert-success"  v-if="successMsg !=''">
                         {{ successMsg }}
                     </div>
                     
                     <div class="col-lg-12 mt-3">
                         <h2>{{ titreListe }}</h2>
                     </div>
-                        <section class="member-list">
-                            <div class="member-item" v-for="member in members">
+                        <ol class="member-list">
+                            <li class="member-item" v-for="member in members">
                                 {{ member.name}} 
                                 <a href="#" class="text-danger" @click="showDeleteModal=true;  selectMember(member)"><i class="fas fa-trash-alt"></i></a>
-                            </div>
-                        </section>
+                            </li>
+                        </ol>
                 </div>
 
                 <!-- fenêtre modale pour suppression d'un membre-->
@@ -92,6 +90,7 @@
                 el: '#app',
                 data: {
                     titreAjout: 'Ajouter un(e) Argonaute',
+                    sousTitreAjout :'Nom de l\'argonaute',
                     titreListe: 'Membres de l\'équipage',
                     errorMsg: "",
                     successMsg: "",
@@ -117,7 +116,7 @@
                     addMember(){
                         var formData = app.toFormData(app.newMember);
                         axios.post("http://localhost/wildcodeschool/goldenfleece-vue-php/process.php?action=create", formData).then(function(response){
-                            app.newMember = {name: ""}    
+                            app.newMember = {name: ""} ;   
                             if(response.data.error){
                                 app.errorMsg = response.data.message;
                             }

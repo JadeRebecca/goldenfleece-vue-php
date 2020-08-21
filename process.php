@@ -2,11 +2,11 @@
     //connexion à la base de données
 	try
 	{
-		$db = new PDO('mysql:host=localhost;dbname=goldenfleece;charset=utf8', 'root', '');
+        $db = new PDO('mysql:host=localhost;dbname=goldenfleece;charset=utf8', 'root', '',array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 	}
 	catch (Exception $e)
 	{
-			die('Erreur : ' . $e->getMessage());
+		die('Erreur : ' . $e->getMessage());
     }
     
     $result = array('error' => false);
@@ -19,12 +19,12 @@
     //récupération de la liste des membres
     if($action == 'read'){
         $members =array();
-        $reqSelect="SELECT * FROM argonauts";
         $reponse = $db->query('SELECT * FROM argonauts');
         while ($donnees = $reponse->fetch()){
-            //$liste.="<div class=\"member-item\">".$donnees['name']."</div>";
-            array_push($members, $donnees);
+            array_push($members, $donnees); //chaque résultat est insère dans le tableau $members
         }
+        $reponse->closeCursor();  //fin du traitement de la requête
+
         $result['members'] = $members;
     }
 
@@ -34,11 +34,11 @@
         $reqInsert->execute(array('name'=> $name));	
         
         if($reqInsert){
-            $result['message'] = "User added successfully!";
+            $result['message'] = "Le membre a été ajouté!";
         }
         else{
             $result['error'] = true;
-            $result['message'] = 'Failed to add';
+            $result['message'] = 'Echec de l\'ajout';
         }
     }
 
@@ -48,14 +48,14 @@
         $reqDelete->execute();	
         
         if($reqDelete){
-            $result['message'] = "User deleted successfully!";
+            $result['message'] = "Le membre a bien été supprimé!";
         }
         else{
             $result['error'] = true;
-            $result['message'] = 'Failed to delete';
+            $result['message'] = 'Echec de la suppression du membre';
         }
     }
 
     echo json_encode($result);
-	//$reponse->closeCursor(); 
+	
 ?>
